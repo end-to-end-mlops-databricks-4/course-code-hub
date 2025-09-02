@@ -24,8 +24,6 @@
 
 ## Assignment Questions
 
-### Q: How detailed should my documentation be?
-**A**: Follow the "pretty notebook" principles from Week 1 - clear, well-documented, and reproducible.
 
 ### Q: What if my model performance is poor?
 **A**: Focus on demonstrating the MLOps concepts rather than achieving perfect model performance.
@@ -36,10 +34,10 @@
 ## Submission Questions
 
 ### Q: What should my PR include?
-**A**: Code, documentation, and any necessary configuration files. Follow the PR template.
+**A**: Code, documentation, and any necessary configuration files. 
 
 ### Q: How long does review take?
-**A**: Reviews typically take 2-3 days. Plan accordingly for deadlines.
+**A**: Reviews typically take 2-3 days.
 
 ### Q: What if CI pipeline fails?
 **A**: Check the error logs, fix issues, and push updates. The pipeline must pass before merge.

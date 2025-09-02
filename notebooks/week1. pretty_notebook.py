@@ -29,7 +29,7 @@ logger.info(yaml.dump(config, default_flow_style=False))
 # COMMAND ----------
 
 # Load the house prices dataset
-spark = SparkSession.builder.getOrCreate()
+# spark = SparkSession.builder.getOrCreate()
 
 filepath = "../data/data.csv"
 

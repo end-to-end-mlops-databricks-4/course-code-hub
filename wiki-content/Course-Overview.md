@@ -4,7 +4,7 @@
 
 ### Course Information
 - **Schedule**: Weekly lectures on Wednesdays 16:00-18:00 CET
-- **Runtime**: Databricks 15.4 LTS (Python 3.11)
+- **Runtime**: Databricks 16.4 LTS (Python 3.11)
 - **Dataset**: House Price Dataset from Kaggle
 - **Delivery**: Weekly deliverables with PR-based submissions
 

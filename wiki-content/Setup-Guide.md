@@ -39,12 +39,3 @@ brew install databricks  # macOS
 # Authenticate
 databricks auth login --configure-cluster --host <workspace-url>
 ```
-
-### Step 5: Verify Setup
-```bash
-# Test Python environment
-python --version  # Should show 3.11.x
-
-# Test Databricks connection
-databricks fs ls dbfs:/
-```
