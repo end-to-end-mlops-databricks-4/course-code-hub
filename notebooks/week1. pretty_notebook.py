@@ -16,12 +16,9 @@ import pandas as pd
 
 from house_price.config import ProjectConfig
 from house_price.data_processor import DataProcessor
-from marvelous.logging import setup_logging
-from marvelous.timer import Timer
 
 config = ProjectConfig.from_yaml(config_path="../project_config.yml", env="dev")
 
-setup_logging(log_file="logs/marvelous-1.log")
 
 logger.info("Configuration loaded:")
 logger.info(yaml.dump(config, default_flow_style=False))
@@ -39,14 +36,13 @@ df = pd.read_csv(filepath)
 
 # COMMAND ----------
 # Load the house prices dataset
-with Timer() as preprocess_timer:
-    # Initialize DataProcessor
-    data_processor = DataProcessor(df, config, spark)
 
-    # Preprocess the data
-    data_processor.preprocess()
+data_processor = DataProcessor(df, config, spark)
 
-logger.info(f"Data preprocessing: {preprocess_timer}")
+# Preprocess the data
+data_processor.preprocess()
+
+logger.info("Data preprocessing is completed.")
 
 # COMMAND ----------
 
