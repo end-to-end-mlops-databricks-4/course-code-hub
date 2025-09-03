@@ -19,14 +19,13 @@ from house_price.data_processor import DataProcessor
 
 config = ProjectConfig.from_yaml(config_path="../project_config.yml", env="dev")
 
-
 logger.info("Configuration loaded:")
 logger.info(yaml.dump(config, default_flow_style=False))
 
 # COMMAND ----------
 
 # Load the house prices dataset
-# spark = SparkSession.builder.getOrCreate()
+spark = SparkSession.builder.getOrCreate()
 
 filepath = "../data/data.csv"
 

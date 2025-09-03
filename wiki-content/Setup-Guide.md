@@ -3,7 +3,7 @@
 ## Environment Setup
 
 ### Prerequisites
-- Python 3.11
+- Python 3.12
 - UV package manager
 - Databricks account
 - GitHub account
@@ -19,13 +19,13 @@ powershell -c "irm https://astral.sh/uv/install.ps1 | iex"
 
 ### Step 2: Clone Repository
 ```bash
-git clone https://github.com/end-to-end-mlops-databricks-3/course-code-hub3.git
-cd course-code-hub3
+git clone https://github.com/end-to-end-mlops-databricks-4/course-code-hub.git
+cd course-code-hub
 ```
 
 ### Step 3: Create Environment
 ```bash
-uv venv -p 3.11 .venv
+uv venv .venv
 source .venv/bin/activate  # On Windows: .venv\Scripts\activate
 uv sync --extra dev
 ```
@@ -37,5 +37,5 @@ brew install databricks  # macOS
 # For Windows: download from GitHub releases
 
 # Authenticate
-databricks auth login --configure-cluster --host <workspace-url>
+databricks auth login --host <workspace-url>
 ```
