@@ -2,8 +2,8 @@
 
 import pandas as pd
 import pytest
-from conftest import CATALOG_DIR
-from delta.tables import DeltaTable
+from tests.conftest import CATALOG_DIR
+
 from pyspark.sql import SparkSession
 
 from house_price.config import ProjectConfig
@@ -159,22 +159,3 @@ def test_save_to_catalog_succesfull(
     assert spark_session.catalog.tableExists(f"{config.catalog_name}.{config.schema_name}.test_set")
 
 
-@pytest.mark.skip(reason="depends on delta tables on Databrics")
-@pytest.mark.order(after=test_save_to_catalog_succesfull)
-def test_delta_table_property_of_enableChangeDataFeed_check(config: ProjectConfig, spark_session: SparkSession) -> None:
-    """Check if Change Data Feed is enabled for train and test sets.
-
-    Verifies that the 'delta.enableChangeDataFeed' property is set to True for both
-    the train and test set Delta tables.
-
-    :param config: Project configuration object
-    :param spark: SparkSession object
-    """
-    train_set_path = f"{config.catalog_name}.{config.schema_name}.train_set"
-    test_set_path = f"{config.catalog_name}.{config.schema_name}.test_set"
-    tables = [train_set_path, test_set_path]
-    for table in tables:
-        delta_table = DeltaTable.forName(spark_session, table)
-        properties = delta_table.detail().select("properties").collect()[0][0]
-        cdf_enabled = properties.get("delta.enableChangeDataFeed")
-        assert bool(cdf_enabled) is True

@@ -15,7 +15,7 @@ dependencies = [
     "databricks-sdk==0.55.0",
     "pydantic==2.11.7",
     "loguru==0.7.3",
-    "python-dotenv==1.1.1"
+    "python-dotenv==1.1.1",
 ]
 
 dynamic = ['version']
@@ -24,12 +24,15 @@ dynamic = ['version']
 dev = ["databricks-connect>=16.0, <17",
        "ipykernel>=6.29.5, <7",
        "pip>=25.0.1, <26",
-       "pre-commit>=4.1.0, <5"]
+       "pre-commit>=4.1.0, <5"
+       ]
 
-test = ["pre-commit>=4.1.0, <5",
+test = ["pre-commit>=4.1.0, <5", 
        "pytest>=8.0.0, <9",
        "pytest-cov>=5.0.0, <6",
-       "pyspark>=3.4.0, <4"]
+       "pyspark>=3.4.0, <4",
+       "pydantic-settings>=2.0.0"
+]
 
 [build-system]
 requires = [
