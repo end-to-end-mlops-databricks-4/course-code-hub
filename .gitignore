@@ -109,7 +109,7 @@ logs/
 
 # Local data
 *.sqlite3
-data/
+#data/
 
 # OS generated files
 .DS_Store
