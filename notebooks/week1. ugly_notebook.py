@@ -11,12 +11,13 @@
 # COMMAND ----------
 
 import datetime
-
 import pandas as pd
 import yaml
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import current_timestamp, to_utc_timestamp
 from sklearn.model_selection import train_test_split
+from databricks.connect import DatabricksSession
+
 
 # COMMAND ----------
 
@@ -24,13 +25,14 @@ from sklearn.model_selection import train_test_split
 with open("../project_config.yml", "r") as file:
     config = yaml.safe_load(file)
 
-catalog_name = config["catalog_name"]
-schema_name = config["schema_name"]
+catalog_name = config["dev"]["catalog_name"]
+schema_name = config["dev"]["schema_name"]
 
 
 # COMMAND ----------
 
 spark = SparkSession.builder.getOrCreate()
+#spark = DatabricksSession.builder.getOrCreate()
 
 # Only works in a Databricks environment if the data is there
 # to put data there, create volume and run databricks fs cp <path> dbfs:/Volumes/mlops_dev/<schema_name>/<volume_name>/
@@ -90,6 +92,9 @@ target = config["target"]
 relevant_columns = cat_features + num_features + [target] + ["Id"]
 df = df[relevant_columns]
 df["Id"] = df["Id"].astype("str")
+
+spark.sql("SELECT current_user()").show()
+spark.sql("SHOW CATALOGS").show()
 
 # COMMAND ----------
 
