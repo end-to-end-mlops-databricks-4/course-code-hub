@@ -1,9 +1,10 @@
 # Databricks notebook source
 import json
-import mlflow
 import os
 
+import mlflow
 from dotenv import load_dotenv
+
 from house_price.utils import is_databricks
 
 # COMMAND ----------
@@ -14,11 +15,15 @@ if not is_databricks():
     load_dotenv()
     profile = os.environ.get("PROFILE", "DEFAULT")
     mlflow.set_tracking_uri(f"databricks://{profile}")
+    mlflow.set_registry_uri(f"databricks-uc://{profile}")
 
 mlflow.get_tracking_uri()
 # COMMAND ----------
+mlflow.get_registry_uri()
+# COMMAND ----------
 experiment = mlflow.set_experiment(experiment_name="/Shared/demo")
-mlflow.set_experiment_tags({"repository_name": "end-to-end-mlops-databricks-3/course-code-hub"})
+mlflow.set_experiment_tags(
+    {"repository_name": "end-to-end-mlops-databricks-4/course-code-hub"})
 
 print(experiment)
 # COMMAND ----------
@@ -32,7 +37,7 @@ mlflow.get_experiment(experiment.experiment_id)
 # COMMAND ----------
 # search for experiment
 experiments = mlflow.search_experiments(
-    filter_string="tags.repository_name='end-to-end-mlops-databricks-3/course-code-hub'"
+    filter_string="tags.repository_name='end-to-end-mlops-databricks-4/course-code-hub'"
 )
 print(experiments)
 
@@ -105,7 +110,6 @@ mlflow.log_metric(key="metric3", value=3.0)
 # dynamically log metric (trainings epochs)
 for i in range(0,3):
     mlflow.log_metric(key="metric1", value=3.0+i/2, step=i)
-mlflow.log_artifact("../demo_artifacts/mlflow_meme.jpeg")
 mlflow.log_text("hello, MLflow!", "hello.txt")
 mlflow.log_dict({"k": "v"}, "dict_example.json")
 mlflow.log_artifacts("../demo_artifacts", artifact_path="demo_artifacts")
@@ -132,6 +136,7 @@ mlflow.end_run()
 # COMMAND ----------
 # other ways
 from time import time
+
 time_hour_ago = int(time() - 3600) * 1000
 
 runs = mlflow.search_runs(
