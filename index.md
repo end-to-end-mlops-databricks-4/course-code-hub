@@ -11,7 +11,7 @@ Welcome to the comprehensive MLOps course using Databricks! This course covers t
 ## Course Information
 
 - **Schedule**: Weekly lectures on Wednesdays 16:00-18:00 CET
-- **Runtime**: Databricks 15.4 LTS (Python 3.11)
+- **Runtime**: Databricks 16.4 LTS (Python 3.12)
 - **Dataset**: [House Price Dataset](https://www.kaggle.com/c/house-prices-advanced-regression-techniques/data) from Kaggle
 - **Delivery**: Weekly deliverables with PR-based submissions
 
@@ -52,7 +52,7 @@ Welcome to the comprehensive MLOps course using Databricks! This course covers t
 
 2. **Create Environment**:
    ```bash
-   uv venv -p 3.11 .venv
+   uv venv -p 3.12 .venv
    source .venv/bin/activate
    uv sync --extra dev
    ```
