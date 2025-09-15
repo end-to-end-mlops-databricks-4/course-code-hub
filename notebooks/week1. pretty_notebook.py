@@ -1,9 +1,9 @@
 # Databricks notebook source
 
 # % pip install -e ..
-# %restart_python test
+# %restart_python
 
-# from pathlib import Path test1212
+# from pathlib import Path 
 # import sys
 # sys.path.append(str(Path.cwd().parent / 'src'))
 # add something
