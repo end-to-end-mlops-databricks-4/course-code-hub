@@ -1,7 +1,7 @@
 # Databricks notebook source
 
 # % pip install -e ..
-# %restart_python
+# %restart_python test
 
 # from pathlib import Path
 # import sys
