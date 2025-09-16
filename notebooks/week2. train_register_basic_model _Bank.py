@@ -27,7 +27,7 @@ tags = Tags(**{"git_sha": "abcd12345", "branch": "week2"})
 # COMMAND ----------
 # Initialize model with the config path
 basic_model = BasicModel(config=config, tags=tags, spark=spark)
-
+print("spark Session:",spark)
 # COMMAND ----------
 basic_model.load_data()
 basic_model.prepare_features()
@@ -59,7 +59,7 @@ basic_model.register_model()
 # COMMAND ----------
 # Predict on the test set
 
-test_set = spark.table(f"{config.catalog_name}.{config.schema_name}.test_set").limit(10)
+test_set = spark.table(f"{config.catalog_name}.{config.schema_name}.test_set_bank").limit(10)
 
 X_test = test_set.drop(config.target).toPandas()
 

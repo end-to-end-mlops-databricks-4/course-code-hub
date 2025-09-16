@@ -59,9 +59,11 @@ class BasicModel:
         Splits data into features (X_train, X_test) and target (y_train, y_test).
         """
         logger.info("🔄 Loading data from Databricks tables...")
+        #self.train_set_spark = self.spark.table(f"mlops_dev.talpytho.train_set_bank")
         self.train_set_spark = self.spark.table(f"{self.catalog_name}.{self.schema_name}.train_set_bank")
         self.train_set = self.train_set_spark.toPandas()
         self.test_set = self.spark.table(f"{self.catalog_name}.{self.schema_name}.test_set_bank").toPandas()
+        #self.test_set = self.spark.table(f"mlops_dev.talpytho.test_set_bank").toPandas()
         self.data_version = "0"  # describe history -> retrieve
 
         self.X_train = self.train_set[self.num_features + self.cat_features]
@@ -119,7 +121,7 @@ class BasicModel:
             signature = infer_signature(model_input=self.X_train, model_output=y_pred)
             dataset = mlflow.data.from_spark(
                 self.train_set_spark,
-                table_name=f"{self.catalog_name}.{self.schema_name}.train_set",
+                table_name=f"{self.catalog_name}.{self.schema_name}.train_set_bank",
                 version=self.data_version,
             )
             mlflow.log_input(dataset, context="training")
