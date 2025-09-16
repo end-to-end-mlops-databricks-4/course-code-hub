@@ -1,25 +1,20 @@
 # Databricks notebook source
 # install dependencies
-%pip install -e ..
-%pip install git+https://github.com/end-to-end-mlops-databricks-3/marvelous@0.1.0
+# %pip install -e ..
+# %pip install git+https://github.com/end-to-end-mlops-databricks-3/marvelous@0.1.0
 
 # COMMAND ----------
 
 #restart python
-%restart_python
+# %restart_python
 
 # COMMAND ----------
 
 # system path update, must be after %restart_python
 # caution! This is not a great approach
-from pathlib import Path
-import sys
-sys.path.append(str(Path.cwd().parent / 'src'))
-
-# COMMAND ----------
-
-# A better approach (this file must be present in a notebook folder, achieved via synchronization)
-%pip install house_price-1.0.1-py3-none-any.whl
+# from pathlib import Path
+# import sys
+# sys.path.append(str(Path.cwd().parent / 'src'))
 
 # COMMAND ----------
 
