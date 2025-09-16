@@ -4,7 +4,7 @@
 
 ### Course Information
 - **Schedule**: Weekly lectures on Wednesdays 16:00-18:00 CET
-- **Runtime**: Databricks 16.4 LTS (Python 3.11)
+- **Runtime**: Databricks 16.4 LTS (Python 3.12)
 - **Dataset**: House Price Dataset from Kaggle
 - **Delivery**: Weekly deliverables with PR-based submissions
 
@@ -21,4 +21,4 @@
 2. Implement solution with your dataset
 3. Create PR to main branch
 4. Code review and CI pipeline approval
-5. Final submissions by **June 18th** (Demo Day)
+5. Final submissions by **October 15th** (Demo Day)

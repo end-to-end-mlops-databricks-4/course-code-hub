@@ -1,0 +1,42 @@
+{
+    "info": {
+        "artifact_uri": "dbfs:/databricks/mlflow-tracking/4432865989482688/08344127d8cc408fbcd51366c7e3f12b/artifacts",
+        "end_time": 1757510941207,
+        "experiment_id": "4432865989482688",
+        "lifecycle_stage": "active",
+        "run_id": "08344127d8cc408fbcd51366c7e3f12b",
+        "run_name": "demo-run",
+        "start_time": 1757510940702,
+        "status": "FINISHED",
+        "user_id": ""
+    },
+    "data": {
+        "metrics": {
+            "metric1": 1.0,
+            "metric2": 2.0
+        },
+        "params": {
+            "type": "demo"
+        },
+        "tags": {
+            "branch": "week2",
+            "git_sha": "1234567890abcd",
+            "mlflow.databricks.cluster.id": "0910-131916-qldzqk3e-v2n",
+            "mlflow.databricks.cluster.info": "{\"cluster_name\":\"\",\"spark_version\":\"17.1.x-photon-scala2.13\",\"autotermination_minutes\":120}",
+            "mlflow.databricks.cluster.libraries": "{\"installable\":[],\"redacted\":[]}",
+            "mlflow.note.content": "demo run",
+            "mlflow.runColor": "#c565c7",
+            "mlflow.runName": "demo-run",
+            "mlflow.source.name": "/Users/mariavechtomova/Marvelous/cohort4/course-code-hub/.venv/lib/python3.12/site-packages/ipykernel_launcher.py",
+            "mlflow.source.type": "LOCAL",
+            "mlflow.user": "maria@marvelousmlops.io"
+        }
+    },
+    "inputs": {
+        "model_inputs": [],
+        "dataset_inputs": []
+    },
+    "outputs": {
+        "model_outputs": []
+    }
+}
