@@ -23,7 +23,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
 
-from house_price.config import ProjectConfig, Tags
+from bank_prediction.config import ProjectConfig, Tags
 
 
 class BasicModel:
@@ -50,7 +50,7 @@ class BasicModel:
         self.catalog_name = self.config.catalog_name
         self.schema_name = self.config.schema_name
         self.experiment_name = self.config.experiment_name_basic
-        self.model_name = f"{self.catalog_name}.{self.schema_name}.house_prices_model_basic"
+        self.model_name = f"{self.catalog_name}.{self.schema_name}.bank_prediction_model_basic"
         self.tags = tags.dict()
 
     def load_data(self) -> None:
@@ -59,9 +59,9 @@ class BasicModel:
         Splits data into features (X_train, X_test) and target (y_train, y_test).
         """
         logger.info("🔄 Loading data from Databricks tables...")
-        self.train_set_spark = self.spark.table(f"{self.catalog_name}.{self.schema_name}.train_set")
+        self.train_set_spark = self.spark.table(f"{self.catalog_name}.{self.schema_name}.train_set_bank")
         self.train_set = self.train_set_spark.toPandas()
-        self.test_set = self.spark.table(f"{self.catalog_name}.{self.schema_name}.test_set").toPandas()
+        self.test_set = self.spark.table(f"{self.catalog_name}.{self.schema_name}.test_set_bank").toPandas()
         self.data_version = "0"  # describe history -> retrieve
 
         self.X_train = self.train_set[self.num_features + self.cat_features]
