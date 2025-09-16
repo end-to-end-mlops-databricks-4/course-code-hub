@@ -1,0 +1,39 @@
+{
+    "info": {
+        "artifact_uri": "dbfs:/databricks/mlflow-tracking/2877019964446722/baad199672a5436aa3c0667c52824798/artifacts",
+        "end_time": 1758018947517,
+        "experiment_id": "2877019964446722",
+        "lifecycle_stage": "active",
+        "run_id": "baad199672a5436aa3c0667c52824798",
+        "run_name": "demo-run",
+        "start_time": 1758018946445,
+        "status": "FINISHED",
+        "user_id": ""
+    },
+    "data": {
+        "metrics": {
+            "metric1": 1.0,
+            "metric2": 2.0
+        },
+        "params": {
+            "type": "demo"
+        },
+        "tags": {
+            "branch": "week2",
+            "git_sha": "1234567890abcd",
+            "mlflow.note.content": "demo run",
+            "mlflow.runColor": "#edb732",
+            "mlflow.runName": "demo-run",
+            "mlflow.source.name": "/home/ta22/course-code-hub/.venv/lib/python3.12/site-packages/ipykernel_launcher.py",
+            "mlflow.source.type": "LOCAL",
+            "mlflow.user": "talpythonq8@gmail.com"
+        }
+    },
+    "inputs": {
+        "model_inputs": [],
+        "dataset_inputs": []
+    },
+    "outputs": {
+        "model_outputs": []
+    }
+}

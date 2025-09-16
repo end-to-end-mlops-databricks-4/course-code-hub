@@ -1,0 +1,15 @@
+{
+    "_experiment_id": "2877019964446722",
+    "_name": "/Shared/taldemo",
+    "_artifact_location": "dbfs:/databricks/mlflow-tracking/2877019964446722",
+    "_lifecycle_stage": "active",
+    "_tags": {
+        "mlflow.ownerId": "70895886933166",
+        "repository_name": "end-to-end-mlops-databricks-4/course-code-hub_tal",
+        "mlflow.experiment.sourceName": "/Shared/taldemo",
+        "mlflow.ownerEmail": "talpythonq8@gmail.com",
+        "mlflow.experimentType": "MLFLOW_EXPERIMENT"
+    },
+    "_creation_time": 1758017892464,
+    "_last_update_time": 1758018615542
+}
