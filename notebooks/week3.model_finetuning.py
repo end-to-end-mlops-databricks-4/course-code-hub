@@ -1,4 +1,11 @@
 # Databricks notebook source
+!pip install house_price-0.0.1-py3-none-any.whl
+
+# COMMAND ----------
+
+# MAGIC %restart_python
+
+# COMMAND ----------
 
 """
 Ray Tune + MLflow Nested Runs for House Price Prediction
@@ -18,6 +25,7 @@ from house_price.config import ProjectConfig, Tags
 from house_price.models.basic_model import BasicModel
 
 # COMMAND ----------
+
 config = ProjectConfig.from_yaml(config_path="../project_config.yml", env="dev")
 tags = Tags(**{"git_sha": "abcd12345", "branch": "week3"})
 spark = SparkSession.builder.getOrCreate()
@@ -27,22 +35,12 @@ basic_model.load_data()
 
 # Split train set into train/validation for tuning
 from sklearn.model_selection import train_test_split
+
 X_train, X_valid, y_train, y_valid = train_test_split(
     basic_model.X_train, basic_model.y_train, test_size=0.2, random_state=42
 )
 
-# --- Define Ray Tune search space ---
-# param_space = {
-#     "n_estimators": tune.choice([50, 100, 200, 300, 400]),
-#     "max_depth": tune.choice([3, 5, 10, 15]),
-#     "learning_rate": tune.choice([0.01, 0.03, 0.05, 0.1, 0.15]),
-# }
-
-param_space = {
-    "n_estimators": tune.choice([50, 100]),
-    "max_depth": tune.choice([3, 5]),
-    "learning_rate": tune.choice([0.01, 0.03]),
-}
+# COMMAND ----------
 
 # --- Trainable function for Ray Tune with nested MLflow runs ---
 """ This is the function that Ray Tune will call for each hyperparameter combination. 
@@ -55,12 +53,20 @@ For each trial:
 6.Compute metrics: MSE, RMSE, MAE, R².
 7.Log parameters and metrics to MLflow.
 8.Report metrics back to Ray Tune for optimization."""
-def train_with_nested_mlflow(config, X_train, X_valid, y_train, y_valid, project_config, tags, parent_run_id=None):
+
+def train_with_nested_mlflow(config, X_train_in: pd.DataFrame,
+                             X_valid_in: pd.DataFrame,
+                             y_train_in: pd.DataFrame,
+                             y_valid_in: pd.DataFrame,
+                             project_config: ProjectConfig,
+                             experiment_id: str,
+                             parent_run_id: str):
     n_estimators, max_depth, learning_rate = (
         config["n_estimators"],
         config["max_depth"],
         config["learning_rate"],
     )
+    mlflow.enable_system_metrics_logging()
     with mlflow.start_run(
         run_name=f"trial_n{n_estimators}_md{max_depth}_lr{learning_rate}",
         nested=True,
@@ -83,100 +89,104 @@ def train_with_nested_mlflow(config, X_train, X_valid, y_train, y_valid, project
             regressor__max_depth=max_depth,
             regressor__learning_rate=learning_rate
         )
-        model.pipeline.fit(X_train, y_train)
+        model.pipeline.fit(X_train_in, y_train_in)
 
-        y_pred = model.pipeline.predict(X_valid)
-        mse = mean_squared_error(y_valid, y_pred)
+        y_pred = model.pipeline.predict(X_valid_in)
+        mse = mean_squared_error(y_valid_in, y_pred)
         rmse = np.sqrt(mse)
         metrics = {
             "mse": mse,
             "rmse": rmse,
-            "mae": mean_absolute_error(y_valid, y_pred),
-            "r2_score": r2_score(y_valid, y_pred),
+            "mae": mean_absolute_error(y_valid_in, y_pred),
+            "r2_score": r2_score(y_valid_in, y_pred),
         }
         mlflow.log_params(config)
         mlflow.log_metrics(metrics)
         tune.report(metrics)
 
+
+# COMMAND ----------
+
+def define_by_run_func(trial):
+    trial.suggest_int("n_estimators", 100, 600, log=True)
+    trial.suggest_int("max_depth", 3, 15)
+    trial.suggest_float("learning_rate", 0.01, 0.2)
+
+# Define Optuna search algo
+algo = OptunaSearch(space=define_by_run_func, metric="rmse", mode="min")
+# Note: A concurrency limiter, limits the number of parallel trials. This is important for Bayesian search (inherently sequential) as too many parallel trials reduces the benefits of priors to inform the next search round.
+#algo = ConcurrencyLimiter(algo, max_concurrent=num_cpu_cores_per_worker*max_worker_nodes+num_cpus_head_node)
+
+# COMMAND ----------
+
 # --- Launch Ray Tune experiment with MLflow parent run ---
-mlflow.set_experiment("/Shared/house-prices-finetuning")
-parent_run = mlflow.start_run(
-    run_name=f"ray-finetuning-{datetime.now().strftime('%Y-%m-%d')}",
-    tags=tags.dict(),
-    description="Hyperparameter tuning with Ray & Optuna"
-)
+import ray
+import os
 
-#You use partial to pass fixed arguments (data, config, tags, parent run ID) to the trainable function.
-trainable = partial(
-    train_with_nested_mlflow,
-    X_train=X_train,
-    X_valid=X_valid,
-    y_train=y_train,
-    y_valid=y_valid,
-    project_config=config,
-    tags=tags,
-    parent_run_id=parent_run.info.run_id,
-)
+from mlflow.utils.databricks_utils import get_databricks_env_vars
 
-"""
-Create a Tuner object with:
-- The trainable function.
-- The search algorithm (OptunaSearch).
-- The number of samples (trials).
-- The metric to optimize (rmse, minimized).
-- The search space.
-"""
-tuner = tune.Tuner(
-    trainable,
-    tune_config=tune.TuneConfig(
-        search_alg=OptunaSearch(),
-        num_samples=2,
-        metric="rmse",
-        mode="min",
-    ),
-    param_space=param_space,
-)
-results = tuner.fit()
-mlflow.end_run()
+mlflow_dbrx_creds = get_databricks_env_vars("databricks")
+os.environ["DATABRICKS_HOST"] = mlflow_dbrx_creds['DATABRICKS_HOST']
+os.environ["DATABRICKS_TOKEN"] = mlflow_dbrx_creds['DATABRICKS_TOKEN']
+
+# for distributed, use this:
+
+# ray_conf = setup_ray_cluster(
+#   min_worker_nodes=2,
+#   max_worker_nodes=2,
+#   num_cpus_head_node=1,
+#   num_cpus_worker_node=2,
+# )
+# os.environ['RAY_ADDRESS'] = ray_conf[0]
+
+n_trials = 10
+
+mlflow.enable_system_metrics_logging()
+mlflow.set_experiment("/Shared/hotel-booking-finetuning")
+experiment_id = mlflow.get_experiment_by_name("/Shared/hotel-booking-finetuning").experiment_id
+with mlflow.start_run(
+    run_name=f"optuna-finetuning-{datetime.now().strftime('%Y-%m-%d')}",
+    tags={"git_sha": "1234567890abcd", "branch": "main"},
+    description="LightGBM hyperparameter tuning with Ray & Optuna") as parent_run:
+
+    tuner = tune.Tuner(
+        ray.tune.with_parameters(
+            train_with_nested_mlflow,
+            X_train_in = X_train,
+            y_train_in = y_train,
+            X_valid_in = X_valid,
+            y_valid_in = y_valid,
+            project_config=config,
+            parent_run_id=parent_run.info.run_id,
+            experiment_id=experiment_id,
+        ),
+        tune_config=tune.TuneConfig(
+            search_alg=algo,
+            num_samples=n_trials,
+            reuse_actors = True # Highly recommended for short training jobs (NOT RECOMMENDED FOR GPU AND LONG TRAINING JOBS)
+            ),
+        # run_config=train.RunConfig(
+        #     name="ray-tune-optuna",
+        #     callbacks=[
+        #         MLflowLoggerCallback(
+        #             experiment_name=experiment_name,
+        #             save_artifact=False,
+        #             tags={"mlflow.parentRunId": parent_run.info.run_id})]
+        # )
+    )
+    results = tuner.fit()
 
 # --- Retrieve best parameters ---
 best_result = results.get_best_result(metric="rmse", mode="min")
 print("Best hyperparameters:", best_result.config)
 
-trainable = partial(
-    train_with_nested_mlflow,
-    X_train=X_train,
-    X_valid=X_valid,
-    y_train=y_train,
-    y_valid=y_valid,
-    project_config=project_config,
-    parent_run_id=run.info.run_id
-)
-
-tuner = tune.Tuner(
-    trainable,
-    tune_config=tune.TuneConfig(
-        search_alg=OptunaSearch(),
-        num_samples=2,
-        metric="rmse",
-        mode="min",
-    ),
-    param_space=param_space,
-)
-
 # COMMAND ----------
-# For distributed runs, only on Databricks all-purpose or jobs compute
-# import ray
-# from ray.util.spark import setup_ray_cluster
 
-# _, remote_conn_str = setup_ray_cluster(num_worker_nodes=2)
-# ray.init(remote_conn_str)
-
-results = tuner.fit()
-mlflow.end_run()
-
-# COMMAND ----------
-best_result=results.get_best_result(metric="rmse", mode="min")
-best_result.config
-
-# COMMAND ----------
+# MAGIC %md
+# MAGIC
+# MAGIC Reference docs:
+# MAGIC - https://docs.ray.io/en/latest/index.html$0
+# MAGIC - https://github.com/databricks-industry-solutions/ray-framework-on-databricks/blob/main/Hyperparam_Optimization/1-HPO-ML-Training-Optuna/01_hpo_optuna_ray_train.py#L502$0
+# MAGIC - https://docs.databricks.com/aws/en/machine-learning/ray/ray-create$0
+# MAGIC - https://docs.ray.io/en/latest/tune/key-concepts.html$0
+# MAGIC
