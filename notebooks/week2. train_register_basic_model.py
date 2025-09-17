@@ -8,6 +8,7 @@ from house_price.models.basic_model import BasicModel
 
 from dotenv import load_dotenv
 from house_price.utils import is_databricks
+import os
 
 # COMMAND ----------
 # If you have DEFAULT profile and are logged in with DEFAULT profile,

@@ -1,22 +1,22 @@
 # Databricks notebook source
 
-from pyspark.sql import SparkSession
-import mlflow
+import os
 
-from house_price.config import ProjectConfig
+import mlflow
+import pandas as pd
+from dotenv import load_dotenv
+from lightgbm import LGBMRegressor
+from mlflow import MlflowClient
+from mlflow.models import infer_signature
+from mlflow.utils.environment import _mlflow_conda_env
+from pyspark.sql import SparkSession
 from sklearn.compose import ColumnTransformer
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder
-from lightgbm import LGBMRegressor
-from mlflow.models import infer_signature
-from marvelous.common import is_databricks
-from dotenv import load_dotenv
-import os
-from mlflow import MlflowClient
-import pandas as pd
-from house_price import __version__
-from mlflow.utils.environment import _mlflow_conda_env
 
+from house_price import __version__
+from house_price.config import ProjectConfig
+from house_price.utils import is_databricks
 
 # COMMAND ----------
 if not is_databricks():
@@ -60,9 +60,11 @@ with mlflow.start_run(run_name="demo-run-model",
     mlflow.log_params(config.parameters)
 
     # Log the model
-    signature = infer_signature(model_input=X_train, model_output=pipeline.predict(X_train))
-    mlflow.sklearn.log_model(
-        sk_model=pipeline, artifact_path="lightgbm-pipeline-model", signature=signature
+    signature = infer_signature(model_input=X_train,
+                                 model_output=pipeline.predict(X_train))
+    model_info = mlflow.sklearn.log_model(
+        sk_model=pipeline, artifact_path="lightgbm-pipeline-model", 
+        signature=signature
     )
 
 # COMMAND ----------
@@ -70,6 +72,27 @@ with mlflow.start_run(run_name="demo-run-model",
 # This may be working in a notebook but will fail on the endpoint
 artifact_uri = mlflow.get_run(run_id=run_id).to_dictionary()["info"]["artifact_uri"]
 
+# COMMAND ----------
+logged_model = mlflow.get_logged_model(model_info.model_id)
+# COMMAND ----------
+# two ways of loading the model
+# using model id
+model = mlflow.sklearn.load_model(f"models:/{model_info.model_id}")
+# COMMAND ----------
+# using run id
+model = mlflow.sklearn.load_model(f'runs:/{run_id}/lightgbm-pipeline-model')
+
+# COMMAND ----------
+import json
+
+logged_model_dict = logged_model.to_dictionary()
+logged_model_dict["metrics"] = [x.__dict__ for x in logged_model_dict["metrics"]]
+with open("../demo_artifacts/logged_model.json", "w") as json_file:
+    json.dump(logged_model_dict, json_file, indent=4)
+# COMMAND ----------
+logged_model.params
+# COMMAND ----------
+logged_model.metrics
 
 # COMMAND ----------
 model_name = f"{config.catalog_name}.{config.schema_name}.model_demo"
@@ -135,6 +158,7 @@ print(predictions)
 # Let's wrap it around a custom model
 from house_price.utils import adjust_predictions
 
+
 class HousePriceModelWrapper(mlflow.pyfunc.PythonModel):
 
     def __init__(self, model):
@@ -174,6 +198,7 @@ with mlflow.start_run(tags={"branch": "week2",
 # Another way of doing the same thing:
 
 from house_price.utils import adjust_predictions
+
 
 class HousePriceModelWrapper2(mlflow.pyfunc.PythonModel):
 
