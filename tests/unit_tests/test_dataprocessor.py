@@ -6,8 +6,8 @@ from tests.conftest import CATALOG_DIR
 
 from pyspark.sql import SparkSession
 
-from house_price.config import ProjectConfig
-from house_price.data_processor import DataProcessor
+from bank_prediction.config import ProjectConfig
+from bank_prediction.data_processor import DataProcessor
 
 
 def test_data_ingestion(sample_data: pd.DataFrame) -> None:

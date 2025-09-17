@@ -1,6 +1,6 @@
 [project]
-name = "house-price"
-description = "Housing prices project"
+name = "Bank-Prediction"
+description = "Bank Prediction project"
 requires-python = ">=3.12, <3.13"
 dependencies = [
     "mlflow==3.1.1",
@@ -16,7 +16,7 @@ dependencies = [
     "pydantic==2.11.7",
     "loguru==0.7.3",
     "python-dotenv==1.1.1",
-    "boto3==1.32.2",
+    "boto3==1.33.0",
 ]
 
 dynamic = ['version']
@@ -43,7 +43,7 @@ build-backend = "setuptools.build_meta"
 
 [tool.setuptools.packages.find]
 where =["src"]
-include = ["house_price*"]
+include = ["bank_predicttion*"]
 
 
 [tool.setuptools.dynamic]
