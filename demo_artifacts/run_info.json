@@ -1,12 +1,13 @@
 {
     "info": {
-        "artifact_uri": "dbfs:/databricks/mlflow-tracking/4432865989482688/08344127d8cc408fbcd51366c7e3f12b/artifacts",
-        "end_time": 1757510941207,
-        "experiment_id": "4432865989482688",
+
+        "artifact_uri": "dbfs:/databricks/mlflow-tracking/2877019964446722/baad199672a5436aa3c0667c52824798/artifacts",
+        "end_time": 1758018947517,
+        "experiment_id": "2877019964446722",
         "lifecycle_stage": "active",
-        "run_id": "08344127d8cc408fbcd51366c7e3f12b",
+        "run_id": "baad199672a5436aa3c0667c52824798",
         "run_name": "demo-run",
-        "start_time": 1757510940702,
+        "start_time": 1758018946445,
         "status": "FINISHED",
         "user_id": ""
     },
@@ -21,15 +22,13 @@
         "tags": {
             "branch": "week2",
             "git_sha": "1234567890abcd",
-            "mlflow.databricks.cluster.id": "0910-131916-qldzqk3e-v2n",
-            "mlflow.databricks.cluster.info": "{\"cluster_name\":\"\",\"spark_version\":\"17.1.x-photon-scala2.13\",\"autotermination_minutes\":120}",
-            "mlflow.databricks.cluster.libraries": "{\"installable\":[],\"redacted\":[]}",
             "mlflow.note.content": "demo run",
-            "mlflow.runColor": "#c565c7",
+            "mlflow.runColor": "#edb732",
             "mlflow.runName": "demo-run",
-            "mlflow.source.name": "/Users/mariavechtomova/Marvelous/cohort4/course-code-hub/.venv/lib/python3.12/site-packages/ipykernel_launcher.py",
+            "mlflow.source.name": "/home/ta22/course-code-hub/.venv/lib/python3.12/site-packages/ipykernel_launcher.py",
             "mlflow.source.type": "LOCAL",
-            "mlflow.user": "maria@marvelousmlops.io"
+            "mlflow.user": "talpythonq8@gmail.com"
+
         }
     },
     "inputs": {

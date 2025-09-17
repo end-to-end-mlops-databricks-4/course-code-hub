@@ -18,12 +18,12 @@ if not is_databricks():
     mlflow.set_registry_uri(f"databricks-uc://{profile}")
 
 mlflow.get_tracking_uri()
-# COMMAND ----------
 mlflow.get_registry_uri()
+
 # COMMAND ----------
-experiment = mlflow.set_experiment(experiment_name="/Shared/demo")
-mlflow.set_experiment_tags(
-    {"repository_name": "end-to-end-mlops-databricks-4/course-code-hub"})
+experiment = mlflow.set_experiment(experiment_name="/Shared/taldemo")
+mlflow.set_experiment_tags({"repository_name": "end-to-end-mlops-databricks-4/course-code-hub_tal"})
+
 
 print(experiment)
 # COMMAND ----------
@@ -37,7 +37,7 @@ mlflow.get_experiment(experiment.experiment_id)
 # COMMAND ----------
 # search for experiment
 experiments = mlflow.search_experiments(
-    filter_string="tags.repository_name='end-to-end-mlops-databricks-4/course-code-hub'"
+    filter_string="tags.repository_name='end-to-end-mlops-databricks-4/course-code-hub_tal'"
 )
 print(experiments)
 
@@ -84,7 +84,7 @@ print(run_info["data"]["params"])
 # COMMAND ----------
 
 run_id = mlflow.search_runs(
-    experiment_names=["/Shared/demo"],
+    experiment_names=["/Shared/demo_tal"],
     filter_string="tags.git_sha='1234567890abcd'",
 ).run_id[0]
 run_info = mlflow.get_run(run_id=f"{run_id}").to_dictionary()

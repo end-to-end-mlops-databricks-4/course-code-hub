@@ -3,10 +3,9 @@
 # % pip install -e ..
 # %restart_python
 
-# from pathlib import Path 
+# from pathlib import Path
 # import sys
 # sys.path.append(str(Path.cwd().parent / 'src'))
-# add something
 
 # COMMAND ----------
 from loguru import logger
@@ -15,27 +14,27 @@ import sys
 from pyspark.sql import SparkSession
 import pandas as pd
 
-from house_price.config import ProjectConfig
-from house_price.data_processor import DataProcessor
+from bank_prediction.config import ProjectConfig
+from bank_prediction.data_processor import DataProcessor
 
-config = ProjectConfig.from_yaml(config_path="../project_config.yml", env="dev")
+config = ProjectConfig.from_yaml(config_path="../project_config_bank.yml", env="dev")
 
 logger.info("Configuration loaded:")
 logger.info(yaml.dump(config, default_flow_style=False))
 
 # COMMAND ----------
 
-# Load the house prices dataset
+# Load the Bank dataset
 spark = SparkSession.builder.getOrCreate()
 
-filepath = "../data/data.csv"
+filepath = "../data/data_Bank.csv"
 
 # Load the data
 df = pd.read_csv(filepath)
 
 
 # COMMAND ----------
-# Load the house prices dataset
+# Load the Bank Prediction dataset
 
 data_processor = DataProcessor(df, config, spark)
 
