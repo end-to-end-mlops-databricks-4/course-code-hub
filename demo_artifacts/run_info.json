@@ -1,5 +1,6 @@
 {
     "info": {
+
         "artifact_uri": "dbfs:/databricks/mlflow-tracking/2877019964446722/baad199672a5436aa3c0667c52824798/artifacts",
         "end_time": 1758018947517,
         "experiment_id": "2877019964446722",
@@ -27,6 +28,7 @@
             "mlflow.source.name": "/home/ta22/course-code-hub/.venv/lib/python3.12/site-packages/ipykernel_launcher.py",
             "mlflow.source.type": "LOCAL",
             "mlflow.user": "talpythonq8@gmail.com"
+
         }
     },
     "inputs": {
