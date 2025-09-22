@@ -72,8 +72,8 @@ class FeatureLookUpModel:
         This function subtracts the year built from the current year.
         """
         self.spark.sql(f"""
-        CREATE OR REPLACE FUNCTION {self.function_name}(year_built INT)
-        RETURNS INT
+        CREATE OR REPLACE FUNCTION {self.function_name}(year_built BIGINT)
+        RETURNS BIGINT
         LANGUAGE PYTHON AS
         $$
         from datetime import datetime
@@ -92,7 +92,7 @@ class FeatureLookUpModel:
         )
         self.test_set = self.spark.table(f"{self.catalog_name}.{self.schema_name}.test_set").toPandas()
 
-        self.train_set = self.train_set.withColumn("YearBuilt", self.train_set["YearBuilt"].cast("int"))
+        self.train_set = self.train_set.withColumn("YearBuilt", self.train_set["YearBuilt"].cast("bigint"))
         self.train_set = self.train_set.withColumn("Id", self.train_set["Id"].cast("string"))
 
         logger.info("✅ Data successfully loaded.")

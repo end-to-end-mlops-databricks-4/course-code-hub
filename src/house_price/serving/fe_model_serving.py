@@ -38,18 +38,10 @@ class FeatureLookupServing:
         print(f"Latest model version: {latest_version}")
         return latest_version
 
-    def create_or_update_online_table(self) -> None:
+    def create_or_update_online_table(self, online_store_name: str) -> None:
         """Create or update an online table for house features."""
         fe = FeatureEngineeringClient()
-        try:
-            online_store = fe.get_online_store(name="house-features")
-        except:
-            fe.create_online_store(
-                name="house-features",
-                capacity="CU_1"
-            )
-            online_store = fe.get_online_store(name="house-features")
-
+        online_store = fe.get_online_store(name=online_store_name)
         # Publish the feature table to the online store
         fe.publish_table(
             online_store=online_store,
