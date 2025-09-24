@@ -40,7 +40,7 @@ from databricks.sdk.service.serving import (
 w = WorkspaceClient()
 model_name=f"{catalog_name}.{schema_name}.house_prices_model_custom_db"
 endpoint_name="house-prices-custom-model-serving-db"
-entity_version = '3' # registered model version
+entity_version = '1' # registered model version
 os.environ["DBR_HOST"] = w.config.host
 os.environ["DBR_TOKEN"] = w.tokens.create(lifetime_seconds=1200).token_value
 

@@ -129,8 +129,8 @@ endpoint_name="house-prices-ab-testing"
 entity_version = model_version.version # registered model version
 
 # get environment variables
-os.environ["DBR_TOKEN"] = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()
-os.environ["DBR_HOST"] = spark.conf.get("spark.databricks.workspaceUrl")
+os.environ["DBR_HOST"] = workspace.config.host
+os.environ["DBR_TOKEN"] = workspace.tokens.create(lifetime_seconds=1200).token_value
 
 served_entities = [
     ServedEntityInput(
