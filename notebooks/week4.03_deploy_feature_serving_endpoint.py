@@ -12,34 +12,21 @@ import mlflow
 import pandas as pd
 import requests
 from databricks import feature_engineering
-from pyspark.dbutils import DBUtils
+from databricks.sdk import WorkspaceClient
 from pyspark.sql import SparkSession
 
-from house_price.utils import is_databricks
 from house_price.config import ProjectConfig
 from house_price.serving.feature_serving import FeatureServing
 
 # COMMAND ----------
 spark = SparkSession.builder.getOrCreate()
-dbutils = DBUtils(spark)
 
 fe = feature_engineering.FeatureEngineeringClient()
 
 # COMMAND ----------
-if is_databricks():
-    from pyspark.dbutils import DBUtils
-    dbutils = DBUtils(spark)
-    os.environ["DBR_TOKEN"] = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()
-    os.environ["DBR_HOST"] = spark.conf.get("spark.databricks.workspaceUrl")
-else:
-    from dotenv import load_dotenv
-    load_dotenv()
-    # DBR_TOKEN and DBR_HOST should be set in your .env file
-    assert os.environ.get("DBR_TOKEN"), "DBR_TOKEN must be set in your environment or .env file."
-    assert os.environ.get("DBR_HOST"), "DBR_HOST must be set in your environment or .env file."
-    profile = os.environ.get("PROFILE", "DEFAULT")
-    mlflow.set_tracking_uri(f"databricks://{profile}")
-    mlflow.set_registry_uri(f"databricks-uc://{profile}")
+w = WorkspaceClient()
+os.environ["DBR_HOST"] = w.config.host
+os.environ["DBR_TOKEN"] = w.tokens.create(lifetime_seconds=1200).token_value
 
 # COMMAND ----------
 # Load project config

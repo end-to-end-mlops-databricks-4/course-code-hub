@@ -21,11 +21,6 @@ from house_price.serving.model_serving import ModelServing
 # spark session
 
 spark = SparkSession.builder.getOrCreate()
-dbutils = DBUtils(spark)
-
-# get environment variables
-os.environ["DBR_TOKEN"] = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()
-os.environ["DBR_HOST"] = spark.conf.get("spark.databricks.workspaceUrl")
 
 # Load project config
 config = ProjectConfig.from_yaml(config_path="../project_config.yml", env="dev")
@@ -36,17 +31,18 @@ schema_name = config.schema_name
 
 """Model serving module."""
 
-import mlflow
 from databricks.sdk import WorkspaceClient
 from databricks.sdk.service.serving import (
     EndpointCoreConfigInput,
     ServedEntityInput,
 )
 
-workspace = WorkspaceClient()
+w = WorkspaceClient()
 model_name=f"{catalog_name}.{schema_name}.house_prices_model_custom_db"
 endpoint_name="house-prices-custom-model-serving-db"
 entity_version = '3' # registered model version
+os.environ["DBR_HOST"] = w.config.host
+os.environ["DBR_TOKEN"] = w.tokens.create(lifetime_seconds=1200).token_value
 
 served_entities = [
     ServedEntityInput(
@@ -55,14 +51,14 @@ served_entities = [
         workload_size="Small",
         entity_version=entity_version,
         environment_vars={
-                    "aws_access_key_id": "{{secrets/mlops_course/aws_access_key_id}}",
-                    "aws_secret_access_key": "{{secrets/mlops_course/aws_secret_access_key}}",
+                    "aws_access_key_id": "{{secrets/mlops/aws_access_key_id}}",
+                    "aws_secret_access_key": "{{secrets/mlops/aws_access_key}}",
                     "region_name": "eu-west-1",
                     }
     )
 ]
 
-workspace.serving_endpoints.create(
+w.serving_endpoints.create(
         name=endpoint_name,
         config=EndpointCoreConfigInput(
             served_entities=served_entities,
@@ -70,7 +66,6 @@ workspace.serving_endpoints.create(
     )
 
 # COMMAND ----------
-
 # Create a sample request body
 required_columns = [
     "LotFrontage",
@@ -133,9 +128,7 @@ Each dataframe record in the request body should be list of json with columns lo
 """
 
 def call_endpoint(record):
-    """
-    Calls the model serving endpoint with a given input record.
-    """
+    """Call the model serving endpoint with a given input record."""
     serving_endpoint = f"https://{os.environ['DBR_HOST']}/serving-endpoints/house-prices-custom-model-serving-db/invocations"
 
     response = requests.post(

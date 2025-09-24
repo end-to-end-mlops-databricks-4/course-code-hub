@@ -611,6 +611,7 @@ with mlflow.start_run(run_name="demo-run-model-fe-pyfunc",
                 python_model=custom_model,
                 artifact_path="lightgbm-pipeline-model-fe",
                 signature=signature,
+                registered_model_name="{config.catalog_name}.{config.schema_name}.house_prices_model_custom_db"
             )
     
 

@@ -19,18 +19,18 @@ from databricks.sdk.service.serving import (
     ServedEntityInput,
 )
 from dotenv import load_dotenv
+from marvelous.common import is_databricks
 from mlflow.models import infer_signature
 from pyspark.sql import SparkSession
 
 from house_price.config import ProjectConfig, Tags
 from house_price.models.basic_model import BasicModel
-from house_price.utils import is_databricks
 
 # COMMAND ----------
 
 if not is_databricks():
     load_dotenv()
-    profile = os.environ.get("PROFILE", "DEFAULT")
+    profile = os.environ["PROFILE"]
     mlflow.set_tracking_uri(f"databricks://{profile}")
     mlflow.set_registry_uri(f"databricks-uc://{profile}")
 
@@ -123,25 +123,15 @@ model_version = mlflow.register_model(
 # COMMAND ----------
 """Model serving module."""
 
-workspace = WorkspaceClient()
+w= WorkspaceClient()
 model_name=f"{catalog_name}.{schema_name}.house_prices_model_pyfunc_ab_test"
 endpoint_name="house-prices-ab-testing"
 entity_version = model_version.version # registered model version
 
-if is_databricks():
-    from pyspark.dbutils import DBUtils
-    dbutils = DBUtils(spark)
-    os.environ["DBR_TOKEN"] = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()
-    os.environ["DBR_HOST"] = spark.conf.get("spark.databricks.workspaceUrl")
-else:
-    from dotenv import load_dotenv
-    load_dotenv()
-    # DBR_TOKEN and DBR_HOST should be set in your .env file
-    assert os.environ.get("DBR_TOKEN"), "DBR_TOKEN must be set in your environment or .env file."
-    assert os.environ.get("DBR_HOST"), "DBR_HOST must be set in your environment or .env file."
-    profile = os.environ.get("PROFILE", "DEFAULT")
-    mlflow.set_tracking_uri(f"databricks://{profile}")
-    mlflow.set_registry_uri(f"databricks-uc://{profile}")
+# get environment variables
+os.environ["DBR_HOST"] = w.config.host
+os.environ["DBR_TOKEN"] = w.tokens.create(lifetime_seconds=1200).token_value
+
 
 served_entities = [
     ServedEntityInput(
@@ -152,7 +142,7 @@ served_entities = [
     )
 ]
 
-workspace.serving_endpoints.create(
+w.serving_endpoints.create(
         name=endpoint_name,
         config=EndpointCoreConfigInput(
             served_entities=served_entities,
@@ -176,8 +166,8 @@ print(dataframe_records[0])
 
 # Call the endpoint with one sample record
 
-def call_endpoint(record):
-    """Calls the model serving endpoint with a given input record."""
+def call_endpoint(record) -> tuple[int, str]:
+    """Call the model serving endpoint with a given input record."""
     serving_endpoint = f"https://{os.environ['DBR_HOST']}/serving-endpoints/house-prices-ab-testing/invocations"
 
     response = requests.post(
