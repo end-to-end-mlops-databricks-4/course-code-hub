@@ -67,7 +67,7 @@ feature_serving = FeatureServing(
 
 # COMMAND ----------
 # Create online table
-feature_serving.create_online_table()
+feature_serving.create_or_update_online_table()
 
 # COMMAND ----------
 # Create feature spec

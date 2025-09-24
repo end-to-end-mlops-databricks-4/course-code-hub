@@ -56,7 +56,7 @@ else:
 # COMMAND ----------
 
 # Create the online table for house features
-feature_model_server.create_online_table(online_store=online_store)
+feature_model_server.create_or_update_online_table(online_store=online_store)
 
 # COMMAND ----------
 # Deploy the model serving endpoint with feature lookup
