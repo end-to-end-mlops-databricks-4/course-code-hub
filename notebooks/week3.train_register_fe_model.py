@@ -33,13 +33,14 @@ fe_model = FeatureLookUpModel(config=config, tags=tags, spark=spark)
 
 # COMMAND ----------
 
-# Create feature table
-fe_model.create_feature_table()
+# Create or update feature table
+# fe_model.create_feature_table()
+fe_model.update_feature_table()
 
 # COMMAND ----------
 
 # Define house age feature function
-fe_model.define_feature_function()
+# fe_model.define_feature_function()
 
 # COMMAND ----------
 
@@ -80,7 +81,7 @@ from pyspark.sql.functions import col
 
 X_test = X_test.withColumn("LotArea", col("LotArea").cast("int")) \
        .withColumn("OverallCond", col("OverallCond").cast("int")) \
-       .withColumn("YearBuilt", col("YearBuilt").cast("int")) \
+       .withColumn("YearBuilt", col("YearBuilt").cast("bigint")) \
        .withColumn("YearRemodAdd", col("YearRemodAdd").cast("int")) \
        .withColumn("TotalBsmtSF", col("TotalBsmtSF").cast("int"))
 
