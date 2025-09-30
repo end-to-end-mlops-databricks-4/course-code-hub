@@ -1,4 +1,3 @@
-from marvelous.common import get_dbr_host
 import argparse
 import os
 import requests
@@ -32,7 +31,8 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-host = get_dbr_host()
+spark = SparkSession.builder.getOrCreate()
+host = spark.conf.get("spark.databricks.workspaceUrl")
 
 org = args.org
 repo = args.repo
