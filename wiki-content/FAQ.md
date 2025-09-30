@@ -34,7 +34,7 @@
 ## Submission Questions
 
 ### Q: What should my PR include?
-**A**: Code, documentation, and any necessary configuration files. 
+**A**: Code, documentation, and any necessary configuration files.
 
 ### Q: How long does review take?
 **A**: Reviews typically take 2-3 days.

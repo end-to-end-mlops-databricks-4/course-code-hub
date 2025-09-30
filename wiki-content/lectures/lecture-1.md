@@ -67,8 +67,8 @@ databricks auth login --configure-cluster --host <workspace-url>
 
 We will build **3 ML services**:
 
-1️⃣ **Real-time model**: Price prediction using only user-inputted features  
-2️⃣ **Hybrid real-time model**: Some features from the user, some from a database lookup  
+1️⃣ **Real-time model**: Price prediction using only user-inputted features
+2️⃣ **Hybrid real-time model**: Some features from the user, some from a database lookup
 3️⃣ **Batch prediction service**: Precomputed prices stored in an online table
 
 ### Example Datasets from Previous Cohorts
@@ -92,25 +92,6 @@ We will build **3 ML services**:
 **Lecture code** (branch week1): [Course Code Hub](https://github.com/end-to-end-mlops-databricks-3/course-code-hub)
 
 ## Technical Notes
-
-### File Transfer to Databricks
-
-How to copy files from local to Databricks:
-
-```bash
-databricks auth login
-databricks fs cp /path/to/source dbfs:/Volumes/path/to/destination
-```
-
-[Documentation Link](https://docs.gcp.databricks.com/en/dev-tools/cli/fs-commands.html)
-
-### Private Package Setup
-
-**Step 1**: Update `pyproject.toml` file. Locally, it works without token if you use HTTPS (not SSH) to clone repos. You may need `GITHUB_TOKEN` env var in `.env` file.
-
-**Step 2**: For cluster creation, use Course policy - it will already have env var setup & init scripts.
-
-**Important for UV users**: Do not use `tool.uv.sources` to specify your dependencies. If you build the package using `uv build` and then install the wheel, the source specified there will be ignored. In the best case, the installation will fail. In the worst case, a package with the same name might be available on PyPI and will be installed instead.
 
 ## Resources
 - [Course Repository Setup](../README.md)

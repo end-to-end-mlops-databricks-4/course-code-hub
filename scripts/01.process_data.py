@@ -1,16 +1,43 @@
 import yaml
 from loguru import logger
 from pyspark.sql import SparkSession
+import argparse
 
 from house_price.config import ProjectConfig
 from house_price.data_processor import DataProcessor, generate_synthetic_data, generate_test_data
-from marvelous.common import create_parser
 
-args = create_parser()
 
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "--root_path",
+    action="store",
+    default=None,
+    type=str,
+    required=True,
+)
+
+parser.add_argument(
+    "--env",
+    action="store",
+    default=None,
+    type=str,
+    required=True,
+)
+
+parser.add_argument(
+    "--is_test",
+    action="store",
+    default=0,
+    type=int,
+    required=True,
+)
+
+args = parser.parse_args()
 root_path = args.root_path
 config_path = f"{root_path}/files/project_config.yml"
+
 config = ProjectConfig.from_yaml(config_path=config_path, env=args.env)
+
 is_test = args.is_test
 
 logger.info("Configuration loaded:")
@@ -27,12 +54,12 @@ if is_test==0:
     # Generate synthetic data.
     # This is mimicking a new data arrival. In real world, this would be a new batch of data.
     # df is passed to infer schema
-    new_data = generate_synthetic_data(df, num_rows=100)
+    new_data = generate_synthetic_data(df, num_rows=10)
     logger.info("Synthetic data generated.")
 else:
     # Generate synthetic data
     # This is mimicking a new data arrival. This is a valid example for integration testing.
-    new_data = generate_test_data(df, num_rows=100)
+    new_data = generate_test_data(df, num_rows=10)
     logger.info("Test data generated.")
 
 # Initialize DataProcessor

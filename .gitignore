@@ -25,6 +25,7 @@ src/house_price.egg-info/
 .installed.cfg
 *.egg
 MANIFEST
+mlruns/
 
 # Installer logs
 pip-log.txt
