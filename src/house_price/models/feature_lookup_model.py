@@ -221,7 +221,11 @@ class FeatureLookUpModel:
                 FROM {self.config.catalog_name}.{self.config.schema_name}.train_set
             )
             INSERT INTO {self.feature_table_name}
-            SELECT Id, OverallQual, GrLivArea, GarageCars
+            SELECT
+                CAST(Id AS BIGINT) AS Id,
+                CAST(OverallQual AS BIGINT) AS OverallQual,
+                CAST(GrLivArea AS BIGINT) AS GrLivArea,
+                CAST(GarageCars AS BIGINT) AS GarageCars
             FROM {self.config.catalog_name}.{self.config.schema_name}.train_set
             WHERE update_timestamp_utc >= (SELECT max_update_timestamp FROM max_timestamp)
             """,
@@ -231,7 +235,11 @@ class FeatureLookUpModel:
                 FROM {self.config.catalog_name}.{self.config.schema_name}.test_set
             )
             INSERT INTO {self.feature_table_name}
-            SELECT Id, OverallQual, GrLivArea, GarageCars
+            SELECT
+                CAST(Id AS BIGINT) AS Id,
+                CAST(OverallQual AS BIGINT) AS OverallQual,
+                CAST(GrLivArea AS BIGINT) AS GrLivArea,
+                CAST(GarageCars AS BIGINT) AS GarageCars
             FROM {self.config.catalog_name}.{self.config.schema_name}.test_set
             WHERE update_timestamp_utc >= (SELECT max_update_timestamp FROM max_timestamp)
             """,
