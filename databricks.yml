@@ -61,7 +61,7 @@ resources:
       tasks:
         - task_key: "preprocessing"
           # job_cluster_key: "house-price-cluster"
-          existing_cluster_id: "${bundle.target.cluster_id}"
+          existing_cluster_id: "0902-120342-tte4270t"
           spark_python_task:
             python_file: "scripts/01.process_data.py"
             parameters:
@@ -75,7 +75,7 @@ resources:
            - whl: ./dist/*.whl
         - task_key: "train_model"
           # job_cluster_key: "house-price-cluster"
-          existing_cluster_id: "${bundle.target.cluster_id}"
+          existing_cluster_id: "0902-120342-tte4270t"
           depends_on:
             - task_key: "preprocessing"
           spark_python_task:
@@ -107,7 +107,7 @@ resources:
             - task_key: "model_updated"
               outcome: "true"
           # job_cluster_key: "house-price-cluster"
-          existing_cluster_id: "${bundle.target.cluster_id}"
+          existing_cluster_id: "0902-120342-tte4270t"
           spark_python_task:
             python_file: "scripts/03.deploy_model.py"
             parameters:
@@ -131,7 +131,7 @@ resources:
             - task_key: "post_commit_status_required"
               outcome: "true"
           # job_cluster_key: "house-price-cluster"
-          existing_cluster_id: "${bundle.target.cluster_id}"
+          existing_cluster_id: "0902-120342-tte4270t"
           spark_python_task:
             python_file: "scripts/04.post_commit_status.py"
             parameters:
