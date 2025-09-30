@@ -53,7 +53,7 @@ class FeatureLookUpModel:
         """
         self.spark.sql(f"""
         CREATE OR REPLACE TABLE {self.feature_table_name}
-        (Id STRING NOT NULL, OverallQual INT, GrLivArea INT, GarageCars INT);
+        (Id STRING NOT NULL, OverallQual BIGINT, GrLivArea BIGINT, GarageCars BIGINT);
         """)
         self.spark.sql(f"ALTER TABLE {self.feature_table_name} ADD CONSTRAINT house_pk PRIMARY KEY(Id);")
         self.spark.sql(f"ALTER TABLE {self.feature_table_name} SET TBLPROPERTIES (delta.enableChangeDataFeed = true);")
@@ -221,11 +221,7 @@ class FeatureLookUpModel:
                 FROM {self.config.catalog_name}.{self.config.schema_name}.train_set
             )
             INSERT INTO {self.feature_table_name}
-            SELECT
-                CAST(Id AS BIGINT) AS Id,
-                CAST(OverallQual AS BIGINT) AS OverallQual,
-                CAST(GrLivArea AS BIGINT) AS GrLivArea,
-                CAST(GarageCars AS BIGINT) AS GarageCars
+            SELECT Id, OverallQual, GrLivArea, GarageCars
             FROM {self.config.catalog_name}.{self.config.schema_name}.train_set
             WHERE update_timestamp_utc >= (SELECT max_update_timestamp FROM max_timestamp)
             """,
@@ -235,11 +231,7 @@ class FeatureLookUpModel:
                 FROM {self.config.catalog_name}.{self.config.schema_name}.test_set
             )
             INSERT INTO {self.feature_table_name}
-            SELECT
-                CAST(Id AS BIGINT) AS Id,
-                CAST(OverallQual AS BIGINT) AS OverallQual,
-                CAST(GrLivArea AS BIGINT) AS GrLivArea,
-                CAST(GarageCars AS BIGINT) AS GarageCars
+            SELECT Id, OverallQual, GrLivArea, GarageCars
             FROM {self.config.catalog_name}.{self.config.schema_name}.test_set
             WHERE update_timestamp_utc >= (SELECT max_update_timestamp FROM max_timestamp)
             """,
@@ -258,7 +250,7 @@ class FeatureLookUpModel:
         :return: True if the current model performs better, False otherwise.
         """
         X_test = test_set.drop(self.config.target)
-        X_test = X_test.withColumn("YearBuilt", F.col("YearBuilt").cast("bigint"))
+        X_test = X_test.withColumn("YearBuilt", F.col("YearBuilt").cast("int"))
 
         predictions_latest = self.load_latest_model_and_predict(X_test).withColumnRenamed(
             "prediction", "prediction_latest"
