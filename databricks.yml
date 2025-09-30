@@ -48,7 +48,7 @@ resources:
       job_clusters:
         - job_cluster_key: "house-price-cluster"
           new_cluster:
-            spark_version: "15.4.x-scala2.12"
+            spark_version: "16.4.x-scala2.12"
             data_security_mode: "SINGLE_USER"
             node_type_id: "r3.xlarge"
             driver_node_type_id: "r3.xlarge"
@@ -60,7 +60,8 @@ resources:
 
       tasks:
         - task_key: "preprocessing"
-          job_cluster_key: "house-price-cluster"
+          # job_cluster_key: "house-price-cluster"
+          existing_cluster_id: "${bundle.target.cluster_id}"
           spark_python_task:
             python_file: "scripts/01.process_data.py"
             parameters:
@@ -73,7 +74,8 @@ resources:
           libraries:
            - whl: ./dist/*.whl
         - task_key: "train_model"
-          job_cluster_key: "house-price-cluster"
+          # job_cluster_key: "house-price-cluster"
+          existing_cluster_id: "${bundle.target.cluster_id}"
           depends_on:
             - task_key: "preprocessing"
           spark_python_task:
@@ -104,7 +106,8 @@ resources:
           depends_on:
             - task_key: "model_updated"
               outcome: "true"
-          job_cluster_key: "house-price-cluster"
+          # job_cluster_key: "house-price-cluster"
+          existing_cluster_id: "${bundle.target.cluster_id}"
           spark_python_task:
             python_file: "scripts/03.deploy_model.py"
             parameters:
@@ -127,7 +130,8 @@ resources:
           depends_on:
             - task_key: "post_commit_status_required"
               outcome: "true"
-          job_cluster_key: "house-price-cluster"
+          # job_cluster_key: "house-price-cluster"
+          existing_cluster_id: "${bundle.target.cluster_id}"
           spark_python_task:
             python_file: "scripts/04.post_commit_status.py"
             parameters:
@@ -176,6 +180,7 @@ targets:
       env: dev
 
   acc:
+    cluster_id: 0902-120342-tte4270t #replace with your own!
     presets:
       name_prefix: 'acc_'
     workspace:
@@ -188,6 +193,7 @@ targets:
 
 
   prd:
+    cluster_id: 0902-120342-tte4270t #replace with your own!
     mode: production
     workspace:
       host: https://dbc-f122dc18-1b68.cloud.databricks.com
