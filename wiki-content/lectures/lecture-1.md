@@ -67,8 +67,8 @@ databricks auth login --configure-cluster --host <workspace-url>
 
 We will build **3 ML services**:
 
-1️⃣ **Real-time model**: Price prediction using only user-inputted features  
-2️⃣ **Hybrid real-time model**: Some features from the user, some from a database lookup  
+1️⃣ **Real-time model**: Price prediction using only user-inputted features
+2️⃣ **Hybrid real-time model**: Some features from the user, some from a database lookup
 3️⃣ **Batch prediction service**: Precomputed prices stored in an online table
 
 ### Example Datasets from Previous Cohorts

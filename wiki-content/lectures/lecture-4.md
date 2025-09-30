@@ -13,7 +13,7 @@ Last week we demonstrated model training and registering for different use cases
 
 ### 1. Model Serving
 
-**`src/house_price/serving/model_serving.py`**  
+**`src/house_price/serving/model_serving.py`**
 **`notebooks/week4.01_deploy_model_serving_endpoint.py`**
 
 Model serving is a process of creating a model serving endpoint that can be used for inference. Endpoint creation process is similar to feature serving, with the exception that we don't need to create a feature table. Instead, we simply create a model serving endpoint that relies on the model we trained.
@@ -28,7 +28,7 @@ Model serving is a process of creating a model serving endpoint that can be used
 
 ### 2. Model Serving with Feature Lookup
 
-**`src/house_price/serving/fe_model_serving.py`**  
+**`src/house_price/serving/fe_model_serving.py`**
 **`notebooks/week4.02_deploy_fe_model_serving_endpoint.py`**
 
 This is a combination of the previous two examples. We load a pre-trained model and create a feature table for lookup. Then we create a model serving endpoint that uses the feature table. Last week, we trained a model with feature lookup and feature func. Now we will create a serving endpoint for that model.
@@ -42,7 +42,7 @@ This is a combination of the previous two examples. We load a pre-trained model 
 
 ### 3. Feature Serving
 
-**`src/house_price/serving/feature_serving.py`**  
+**`src/house_price/serving/feature_serving.py`**
 **`notebooks/week4.03_deploy_feature_serving_endpoint.py`**
 
 **Steps:**

@@ -26,7 +26,7 @@ This way, you can still learn the process of registering and logging models with
 This notebook demonstrates how to use the Feature Engineering Client to:
 
 - **Create a feature table**
-- **Define a feature function** 
+- **Define a feature function**
 - **Generate a trainset**
 - **Register a model**
 
