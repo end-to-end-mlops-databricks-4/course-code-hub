@@ -73,13 +73,13 @@ fe_model = FeatureLookUpModel(config=config, tags=tags, spark=spark)
 logger.info("Model initialized.")
 
 # Create feature table
-# fe_model.create_feature_table()
+fe_model.create_feature_table()
 
 fe_model.update_feature_table()
 logger.info("Feature table updated.")
 
 # Define house age feature function
-# fe_model.define_feature_function()
+fe_model.define_feature_function()
 
 # Load data
 fe_model.load_data()
