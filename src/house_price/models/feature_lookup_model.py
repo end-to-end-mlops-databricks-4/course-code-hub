@@ -53,7 +53,7 @@ class FeatureLookUpModel:
         """
         self.spark.sql(f"""
         CREATE OR REPLACE TABLE {self.feature_table_name}
-        (Id STRING NOT NULL, OverallQual BIGINT, GrLivArea BIGINT, GarageCars BIGINT);
+        (Id STRING NOT NULL, OverallQual LONG, GrLivArea LONG, GarageCars LONG);
         """)
         self.spark.sql(f"ALTER TABLE {self.feature_table_name} ADD CONSTRAINT house_pk PRIMARY KEY(Id);")
         self.spark.sql(f"ALTER TABLE {self.feature_table_name} SET TBLPROPERTIES (delta.enableChangeDataFeed = true);")

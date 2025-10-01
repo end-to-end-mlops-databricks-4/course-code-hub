@@ -2,16 +2,15 @@ import argparse
 import os
 import requests
 from loguru import logger
-
+from pyspark.sql import SparkSession
 
 parser = argparse.ArgumentParser()
 
 parser.add_argument(
-    "--git_sha",
+    "post_commit_check",
     action="store",
     default=None,
     type=str,
-    required=True,
 )
 
 parser.add_argument(
