@@ -5,24 +5,41 @@ from loguru import logger
 
 
 parser = argparse.ArgumentParser()
-parser.add_argument(
-    "--root_path",
-    action="store",
-    default=None,
-    type=str,
-    required=True,
-)
-
-parser.add_argument(
-    "--env",
-    action="store",
-    default=None,
-    type=str,
-    required=True,
-)
 
 parser.add_argument(
     "--git_sha",
+    action="store",
+    default=None,
+    type=str,
+    required=True,
+)
+
+parser.add_argument(
+    "--job_id",
+    action="store",
+    default=None,
+    type=str,
+    required=True,
+)
+
+parser.add_argument(
+    "--job_run_id",
+    action="store",
+    default=None,
+    type=str,
+    required=True,
+)
+
+parser.add_argument(
+    "--org",
+    action="store",
+    default=None,
+    type=str,
+    required=True,
+)
+
+parser.add_argument(
+    "--repo",
     action="store",
     default=None,
     type=str,
