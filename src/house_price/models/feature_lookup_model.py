@@ -250,7 +250,7 @@ class FeatureLookUpModel:
         :return: True if the current model performs better, False otherwise.
         """
         X_test = test_set.drop(self.config.target)
-        X_test = X_test.withColumn("YearBuilt", F.col("YearBuilt").cast("int"))
+        X_test = X_test.withColumn("YearBuilt", F.col("YearBuilt").cast("bigint"))
 
         predictions_latest = self.load_latest_model_and_predict(X_test).withColumnRenamed(
             "prediction", "prediction_latest"
