@@ -59,9 +59,9 @@ feature_model_server = FeatureLookupServing(
 )
 
 # Create or update the online table for house features
-# online_store_name = "house-features"
-# feature_model_server.create_or_update_online_table(online_store_name=online_store_name)
-# logger.info("Created or updated online table.")
+online_store_name = "house-features"
+feature_model_server.create_or_update_online_table(online_store_name=online_store_name)
+logger.info("Created or updated online table.")
 
 # Deploy the model serving endpoint with feature lookup
 feature_model_server.deploy_or_update_serving_endpoint(version=model_version)

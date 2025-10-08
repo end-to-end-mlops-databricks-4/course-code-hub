@@ -1,13 +1,20 @@
-from marvelous.common import get_dbr_host
 import argparse
 import os
 import requests
 from loguru import logger
-
+from pyspark.sql import SparkSession
 
 parser = argparse.ArgumentParser()
+
 parser.add_argument(
-    "--root_path",
+    "post_commit_check",
+    action="store",
+    default=None,
+    type=str,
+)
+
+parser.add_argument(
+    "--job_id",
     action="store",
     default=None,
     type=str,
@@ -15,7 +22,7 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "--env",
+    "--job_run_id",
     action="store",
     default=None,
     type=str,
@@ -23,7 +30,15 @@ parser.add_argument(
 )
 
 parser.add_argument(
-    "--git_sha",
+    "--org",
+    action="store",
+    default=None,
+    type=str,
+    required=True,
+)
+
+parser.add_argument(
+    "--repo",
     action="store",
     default=None,
     type=str,
@@ -32,7 +47,8 @@ parser.add_argument(
 
 args = parser.parse_args()
 
-host = get_dbr_host()
+spark = SparkSession.builder.getOrCreate()
+host = spark.conf.get("spark.databricks.workspaceUrl")
 
 org = args.org
 repo = args.repo
