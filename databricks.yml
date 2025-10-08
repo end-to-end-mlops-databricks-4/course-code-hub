@@ -2,7 +2,6 @@ bundle:
   name: course-code-hub
 
 include:
-  - bundle_monitoring.yml
   - resources/*.yml
 
 artifacts:
@@ -75,8 +74,7 @@ resources:
           libraries:
            - whl: ./dist/*.whl
         - task_key: "train_model"
-          # job_cluster_key: "house-price-cluster"
-          existing_cluster_id: "0902-120342-tte4270t"
+          job_cluster_key: "house-price-cluster"
           depends_on:
             - task_key: "preprocessing"
           spark_python_task:
@@ -107,8 +105,7 @@ resources:
           depends_on:
             - task_key: "model_updated"
               outcome: "true"
-          # job_cluster_key: "house-price-cluster"
-          existing_cluster_id: "0902-120342-tte4270t"
+          job_cluster_key: "house-price-cluster"
           spark_python_task:
             python_file: "scripts/03.deploy_model.py"
             parameters:
@@ -131,8 +128,7 @@ resources:
           depends_on:
             - task_key: "post_commit_status_required"
               outcome: "true"
-          # job_cluster_key: "house-price-cluster"
-          existing_cluster_id: "0902-120342-tte4270t"
+          job_cluster_key: "house-price-cluster"
           spark_python_task:
             python_file: "scripts/04.post_commit_status.py"
             parameters:
